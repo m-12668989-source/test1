@@ -1,0 +1,292 @@
+```html
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistem Outing Asrama</title>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif;}
+
+    body{
+      background:linear-gradient(135deg,#800000,#003366,#FFD700);
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding-top:70px;
+    }
+
+    .topbar{
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:60px;
+      background:#003366;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:0 10px;
+      z-index:999;
+      box-shadow:0 2px 10px rgba(0,0,0,0.3);
+      color:white;
+      font-weight:bold;
+    }
+
+    .topbar .user{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-size:15px;
+    }
+
+    .topbar button{
+      background:#FFD700;
+      color:black;
+      border:none;
+      width:28px;
+      height:28px;
+      border-radius:4px;
+      font-weight:bold;
+      cursor:pointer;
+      font-size:14px;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:0;
+    }
+
+    .container{
+      background:white;
+      width:100%;
+      max-width:450px;
+      padding:30px;
+      border-radius:20px;
+      box-shadow:0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    h1{text-align:center;color:#800000;margin-bottom:10px;}
+
+    label{font-weight:bold;display:block;margin-top:15px;color:#003366;}
+
+    input,select{
+      width:100%;padding:12px;
+      border:2px solid #ddd;
+      border-radius:10px;
+      margin-top:5px;
+    }
+
+    .btn-group{display:flex;flex-direction:column;gap:10px;margin-top:20px;}
+
+    button{
+      padding:14px;
+      border:none;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:bold;
+      color:white;
+    }
+
+    .btn-merun{background:#800000;}
+    .btn-kuning{background:#FFD700;color:black;}
+    .btn-biru{background:#003366;}
+
+    .status-box{
+      margin-top:15px;
+      padding:15px;
+      background:#f3f3f3;
+      border-radius:10px;
+      line-height:1.8;
+    }
+
+    .small-btn{
+      margin-top:10px;
+      width:100%;
+      background:#444;
+      color:white;
+      padding:10px;
+      border:none;
+      border-radius:10px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="topbar">
+  <div class="user">👤 <span id="userRole">Guest</span></div>
+  <button id="logoutBtn" onclick="logout()">🚪</button>
+</div>
+
+<div class="container">
+
+  <!-- LOGIN -->
+  <div id="loginPage">
+    <h1>🔐 Login Sistem</h1>
+
+    <label>Username</label>
+    <input id="user">
+
+    <label>Password</label>
+    <input type="password" id="pass">
+
+    <div class="btn-group">
+      <button class="btn-biru" onclick="login()">Login</button>
+    </div>
+
+    <p id="loginError" style="color:red;text-align:center;margin-top:10px;"></p>
+  </div>
+
+  <!-- HOME -->
+  <div id="homePage" style="display:none;">
+
+    <div style="text-align:center;">
+      <img src="logo.jpg" alt="Logo Sekolah"
+      style="width:120px;height:120px;border-radius:20px;object-fit:cover;margin-bottom:10px;">
+
+      <h1>SCHOOLTUMB</h1>
+    </div>
+
+    <p id="roleText"></p>
+
+    <div class="btn-group">
+      <button class="btn-merun" onclick="bukaPage('outingPage')">Outing Asrama</button>
+      <button class="btn-kuning" onclick="bukaPage('pelawatPage')">Pelawat</button>
+      <button class="btn-biru" onclick="bukaPage('spmPage')">SPM</button>
+      <button class="btn-merun" onclick="bukaPage('etrPage')">ETR</button>
+      <button class="btn-biru" onclick="bukaPage('parentPage')">Ibu Bapa / Penjaga</button>
+    </div>
+  </div>
+
+  <!-- IBU BAPA -->
+  <div id="parentPage" style="display:none;">
+
+    <h1>👨‍👩‍👧 Ibu Bapa / Penjaga</h1>
+
+    <div id="parentForm">
+
+      <label>Nama Anak</label>
+      <input type="text" id="namaAnak">
+
+      <label>Kelas</label>
+      <input type="text" id="kelasAnak">
+
+      <label>Nama Ibu Bapa / Penjaga</label>
+      <input type="text" id="namaPenjaga">
+
+      <div class="btn-group">
+        <button class="btn-merun" onclick="paparMaklumat()">Hantar</button>
+        <button class="btn-biru" onclick="kembaliHome()">Home</button>
+      </div>
+
+    </div>
+
+    <div id="parentResult" style="display:none;">
+
+      <div class="status-box" id="resultBox"></div>
+
+      <button class="small-btn" onclick="kembaliHome()">Home</button>
+
+    </div>
+
+  </div>
+
+  <!-- OUTING -->
+  <div id="outingPage" style="display:none;">
+    <h1>Outing Asrama</h1>
+
+    <label>Nama</label>
+    <input id="nama">
+
+    <label>Kelas</label>
+    <input id="kelas">
+
+    <label>Sebab</label>
+    <input id="sebab">
+
+    <label>Tarikh</label>
+    <input type="date" id="tarikh">
+
+    <div class="btn-group">
+      <button class="btn-merun" onclick="hantarData()">Hantar</button>
+      <button class="btn-biru" onclick="kembaliHome()">Home</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let role="";
+
+function login(){
+  const u=document.getElementById('user').value;
+  const p=document.getElementById('pass').value;
+
+  if(u=="ibu" && p=="1234"){
+    role="Ibu Bapa";
+  } else if(u=="pelajar" && p=="1234"){
+    role="Pelajar";
+  } else {
+    document.getElementById('loginError').innerText="Login salah!";
+    return;
+  }
+
+  document.getElementById('loginPage').style.display="none";
+  document.getElementById('homePage').style.display="block";
+  document.getElementById('roleText').innerText="Selamat datang, "+role;
+  document.getElementById('userRole').innerText=role;
+  document.getElementById('logoutBtn').style.display="flex";
+}
+
+function logout(){
+  location.reload();
+}
+
+function bukaPage(id){
+  document.getElementById('homePage').style.display='none';
+  document.getElementById('outingPage').style.display='none';
+  document.getElementById('parentPage').style.display='none';
+
+  document.getElementById(id).style.display='block';
+}
+
+function kembaliHome(){
+  bukaPage('homePage');
+}
+
+function hantarData(){
+  alert('Telah dihantar & sedang disemak');
+  kembaliHome();
+}
+
+function paparMaklumat(){
+
+  const nama=document.getElementById('namaAnak').value;
+  const kelas=document.getElementById('kelasAnak').value;
+  const penjaga=document.getElementById('namaPenjaga').value;
+
+  if(nama=='' || kelas=='' || penjaga==''){
+    alert('Sila isi semua maklumat!');
+    return;
+  }
+
+  document.getElementById('parentForm').style.display='none';
+  document.getElementById('parentResult').style.display='block';
+
+  document.getElementById('resultBox').innerHTML=`
+    <b>Nama Anak:</b> ${nama}<br>
+    <b>Kelas:</b> ${kelas}<br>
+    <b>Nama Penjaga:</b> ${penjaga}<br><br>
+
+    <b>Tahap Pencapaian Akademik:</b> Cemerlang ⭐<br>
+    <b>Tahap Disiplin:</b> Sangat Baik ✅<br>
+    <b>Kehadiran Asrama:</b> 92%
+  `;
+}
+</script>
+
+</body>
+</html>
+```
